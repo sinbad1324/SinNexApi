@@ -45,5 +45,5 @@ for img in dt.Read("Assets"):
         }
     })
 
-
 LU.Lua(JSONdict , "MyLulu_Max_65")
+dt.Write(JSONdict , "newLua-13-10-2024")
