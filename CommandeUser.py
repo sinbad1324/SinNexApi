@@ -27,8 +27,23 @@ def Main(path):
     
     FlipBook = GetGrid.GetResult() 
     Size = newimg.GetImgSize() 
-    #newimg.Show(True)
+  #  newimg.Show(True)
     return FlipBook , Size , newimg.OriginaleID
 
-#print(Main("18617720196"))
+#print(Main("110761450786278"))
 
+JSONdict = []
+for img in dt.Read("Assets"):
+    flip , size , id =  Main(img)
+    JSONdict.append({
+        "name": "none",
+        "AssetID": id,
+        "FlipBook": flip,
+        "Sizes": {
+            "x": size["x"],
+            "y": size["y"]
+        }
+    })
+
+
+LU.Lua(JSONdict , "MyLulu_Max_65")
