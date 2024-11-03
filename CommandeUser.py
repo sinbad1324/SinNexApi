@@ -14,36 +14,42 @@ import modules.ToLua as LU
 
 
 
+
+
 def Main(path):
 
-
-    print(path , "--------------------------Path")
-    newimg = Img(path )
-
-    NewTemp = Temp(newimg)
-    GetGrid = Ggrid(NewTemp) 
-    #GetGrid.SetDev(True)
-    GetGrid.GetGridTemplate()
+    try:
+        print(path , "--------------------------Path")
+        newimg = Img(path )
+        NewTemp = Temp(newimg)
+        GetGrid = Ggrid(NewTemp) 
+        #GetGrid.SetDev(True)
+        GetGrid.GetGridTemplate()
+        
+        FlipBook = GetGrid.GetResult() 
+        Size = newimg.GetImgSize() 
+    #  newimg.Show(True)
+        return FlipBook , Size , newimg.OriginaleID
+    except :
+        print("No stop here!!!!!!!!!")
     
-    FlipBook = GetGrid.GetResult() 
-    Size = newimg.GetImgSize() 
-  #  newimg.Show(True)
-    return FlipBook , Size , newimg.OriginaleID
+    return False , False, False
 
 #print(Main("110761450786278"))
 
 JSONdict = []
 for img in dt.Read("Assets"):
     flip , size , id =  Main(img)
-    JSONdict.append({
-        "name": "none",
-        "AssetID": id,
-        "FlipBook": flip,
-        "Sizes": {
-            "x": size["x"],
-            "y": size["y"]
-        }
-    })
+    if flip and size and id :
+        JSONdict.append({
+            "name": "none",
+            "AssetID": id,
+            "FlipBook": flip,
+            "Sizes": {
+                "x": size["x"],
+                "y": size["y"]
+            }
+        })
 
-LU.Lua(JSONdict , "MyLulu_Max_65")
-dt.Write(JSONdict , "newLua-13-10-2024")
+LU.Lua(JSONdict , "LuaU-03-11-2024") 
+dt.Write(JSONdict , "newLua-03-11-2024")

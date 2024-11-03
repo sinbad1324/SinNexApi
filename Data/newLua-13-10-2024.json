@@ -2,8 +2,8 @@
     {
         "name": "none",
         "AssetID": "15355184213",
-        "FlipBook": "4X4",
-        "Sizes": {
+        "Flipbook": "4X4",
+        "Size": {
             "x": 512,
             "y": 512
         }
@@ -11,8 +11,8 @@
     {
         "name": "none",
         "AssetID": "15085349930",
-        "FlipBook": "4X4",
-        "Sizes": {
+        "Flipbook": "4X4",
+        "Size": {
             "x": 1024,
             "y": 1024
         }

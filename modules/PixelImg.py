@@ -18,6 +18,8 @@ class Img:
     def __init__(self,path , pxlSize = 10) -> None:
 
         img ,self.OriginaleID =  hp.OpenImg(path)
+        if img == None : return None
+
         img = img.convert("RGBA")
 
       #  gray_image = ImageOps.grayscale(img)
@@ -42,6 +44,7 @@ class Img:
         self.Raduis = 1
 
     def GetSize(self , template , div=1 , padd:int=0):
+        if self.img == None: return [(0,0),(0,0 , 0  , 0 )]
     #    bbox = self.img.getbbox()
         bbox = self.binary_image.getbbox() 
         if bbox is None:
@@ -63,11 +66,10 @@ class Img:
 
             self.Col = int(x/div)
             self.Row = int(y/div)
-
-
         return [(x,y),(x_s,y_s , x_e  , y_e )]
 
     def GetImgSize(self):
+        if self.img == None: return {"x" :0 , "y":0}
         width, height = self.img.size
         return  {"x" :width , "y":height}
 
