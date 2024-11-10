@@ -1,7 +1,20 @@
 from PIL import Image ,ImageDraw , ImageOps
 import numpy as np
+import clip  
+import torch
+from PIL import Image
 import matplotlib.pyplot as plt
 import modules.GetImgSize as hp
+from modules.LoadData import getConvertedImage ,categoris
+
+
+
+device = "cuda" if torch.cuda.is_available() else "cpu"
+model, preprocess = clip.load("ViT-B/32", device=device)
+
+
+category_features = categoris() # charger les images
+
 
 def pixelate(image, pixel_size):
     small_image = image.resize(
@@ -14,12 +27,15 @@ def pixelate(image, pixel_size):
     )
     return pixelated_image
 
+
+
+
 class Img:
     def __init__(self,path , pxlSize = 10) -> None:
 
         img ,self.OriginaleID =  hp.OpenImg(path)
         if img == None : return None
-
+        self.ConvertedImage = getConvertedImage(img)
         img = img.convert("RGBA")
 
       #  gray_image = ImageOps.grayscale(img)
@@ -93,7 +109,19 @@ class Img:
         else:
             self.img.show()
 
+    def getCompare(self):
+        with torch.no_grad():
+            input_features = model.encode_image(self.ConvertedImage)
+            input_features /= input_features.norm(dim=-1, keepdim=True) 
 
+            similarities = {}
+        for category, features in category_features.items():
+            similarity = (input_features @ features.T).mean().item() 
+            similarities[category] = similarity
+
+        predicted_category = max(similarities, key=similarities.get)
+        print(f"La catégorie prédite est : {predicted_category} pour cette img {self.OriginaleID}")
+        return predicted_category
 
 
 
