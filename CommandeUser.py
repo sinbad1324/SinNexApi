@@ -5,6 +5,7 @@ from flask_cors import CORS
 
 
 from modules.PixelImg import Img
+from modules.GetImgSize import saveAllimages
 from modules.Template import Temp
 from modules.Grid import Ggrid
 from modules.Files import FilesList
@@ -54,6 +55,9 @@ for img in dt.Read("Assets"):
             }
         })
 
-# LU.Lua(JSONdict , "LuaU-03-11-2024") 
-print(JSONdict)
+# LU.Lua(JSONdict , "LuaU-03-11-2024")    
 dt.Write(JSONdict , "FOLDER-TO-PLUGIN/newLua-03-11-2024")
+
+# for img in dt.Read("Assets"):
+#     print(img)
+#     saveAllimages(img)

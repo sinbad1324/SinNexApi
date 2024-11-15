@@ -58,4 +58,16 @@ def OpenImg(path:str):
 
 
 
+def saveAllimages(path:str):
+    image_data=None
+    assete=""
+    if "rbxassetid://" in path:
+        newpath = path.split("//")[-1] 
+        image_data , assete = GetReelImg(newpath)
+    elif path.isdigit():
+        image_data , assete = GetReelImg(path)
+    elif "https://create.roblox.com" in path:
+        newpath = path.split("/")[-2] 
+        image_data , assete = GetReelImg(newpath)
+    Image.open(image_data).save("H:\\AssetsData\\"+assete+".png")
 
