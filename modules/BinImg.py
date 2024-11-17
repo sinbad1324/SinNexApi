@@ -1,6 +1,5 @@
 from PIL import Image, ImageOps
 import numpy as np
-import matplotlib.pyplot as plt
 
 def pixelate(image, pixel_size):
     small_image = image.resize(

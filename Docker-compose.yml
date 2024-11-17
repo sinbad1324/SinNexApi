@@ -1,0 +1,8 @@
+services:
+  grid-detect:
+    tty: true
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./:/home/ImagesSinNeXAPI

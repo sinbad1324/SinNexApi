@@ -25,7 +25,6 @@ def GetReelImg(assetsId):
                     tableStr:list[str] = theUrl.split("/")[-1]
                     newAssetId = tableStr[4:]
                     OriginalID = newAssetId
-                    print("old: " ,assetsId , "new: " ,newAssetId )
                     return GetReelImg(newAssetId)  
             image_data = BytesIO(content_byte)
             return  image_data , OriginalID
@@ -40,34 +39,22 @@ def GetReelImg(assetsId):
 
 
 def OpenImg(path:str):
-    if "C:" in path:
-       return Image.open(path)
-    elif "rbxassetid://" in path:
-        newpath = path.split("//")[-1] 
-        image_data , assete = GetReelImg(newpath)
-        return Image.open(image_data) , assete
-    elif path.isdigit():
-        image_data , assete = GetReelImg(path)
-        return Image.open(image_data) , assete
-    elif "https://create.roblox.com" in path:
-        newpath = path.split("/")[-2] 
-        image_data , assete = GetReelImg(newpath)
-        return Image.open(image_data) , assete
-
-
-
-
-
-def saveAllimages(path:str):
-    image_data=None
-    assete=""
     if "rbxassetid://" in path:
         newpath = path.split("//")[-1] 
         image_data , assete = GetReelImg(newpath)
+        if image_data is None:return None , None
+        return Image.open(image_data) , assete
     elif path.isdigit():
         image_data , assete = GetReelImg(path)
+        if image_data is None:return None , None
+        return Image.open(image_data) , assete
     elif "https://create.roblox.com" in path:
         newpath = path.split("/")[-2] 
         image_data , assete = GetReelImg(newpath)
-    Image.open(image_data).save("H:\\AssetsData\\"+assete+".png")
+        if image_data is None:return None , None
+        return Image.open(image_data) , assete
+
+
+
+
 
