@@ -32,7 +32,6 @@ def obfus():
         header = request.headers
         if  sec.VerifieHeader(header) and sec.VerifieRobloxUser(str(record["userId"])):
            if record["code"]:
-                print(record["code"])
                 return ob.getObfuscedCode(record["code"])
            else:
                return "[code:warn('No code.')]"
