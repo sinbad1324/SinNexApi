@@ -6,7 +6,7 @@ def aut(callback):
         port=5432,
         database="postgres",
         user="postgres",
-        password="1324qewr"
+        password="1234"
     )
     with con:
         with con.cursor() as cur:
