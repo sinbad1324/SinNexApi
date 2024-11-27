@@ -18,21 +18,56 @@ def Main(path):
         return False , False, False , None
 
 
-def GetAll(record):
+def GetAll(record ):
     JSONdict={}
     for img in record:
-        flip , size , id  , cat=  Main(img)
+        flip , size , id  , cat:str=  Main(img)
         if flip and size and id and cat :
             if cat not in JSONdict:
-                JSONdict[cat] ={"Assets":[]}
-            JSONdict[cat]["Assets"].append({
-                "name": "none",
-                "AssetID": id,
-                "Flipbook": flip,
-                "Size": {
-                    "x": size["x"],
-                    "y": size["y"]
-                },
-            "cat":cat 
-            })
+                if cat.lower() != "beam":
+                    JSONdict[cat] ={
+                        "Assets":[],
+                        "Flipbook":{
+                            "Assets":[]
+                        },
+                        "Textures":{
+                            "Assets":[]
+                        }
+                    }
+                    if flip.lower() != "none":
+                           JSONdict[cat]["Flipbook"]["Assets"].append({
+                                "name": "none",
+                                "AssetID": id,
+                                "Flipbook": flip,
+                                "Size": {
+                                    "x": size["x"],
+                                    "y": size["y"]
+                                },
+                            "cat":cat 
+                            })
+                    else:
+                             JSONdict[cat]["Textures"]["Assets"].append({
+                                "name": "none",
+                                "AssetID": id,
+                                "Flipbook": flip,
+                                "Size": {
+                                    "x": size["x"],
+                                    "y": size["y"]
+                                },
+                            "cat":cat 
+                            })
+                else:
+                    JSONdict[cat] ={
+                        "Assets":[]
+                    }
+                    JSONdict[cat]["Assets"].append({
+                        "name": "none",
+                        "AssetID": id,
+                        "Flipbook": flip,
+                        "Size": {
+                            "x": size["x"],
+                            "y": size["y"]
+                        },
+                    "cat":cat 
+                    })
     return JSONdict
