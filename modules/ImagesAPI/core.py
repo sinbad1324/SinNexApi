@@ -21,7 +21,7 @@ def Main(path):
 def GetAll(record ):
     JSONdict={}
     for img in record:
-        flip , size , id  , cat:str=  Main(img)
+        flip , size , id  , cat=  Main(img)
         if flip and size and id and cat :
             if cat not in JSONdict:
                 if cat.lower() != "beam":
