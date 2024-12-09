@@ -14,60 +14,82 @@ def Main(path):
         FlipBook = GetGrid.GetResult() 
         Size = newimg.GetImgSize() 
         return FlipBook , Size , newimg.OriginaleID , cat
-    except :
-        return False , False, False , None
+    except  :
+        print("prob.")
+    return False , False, False , None
 
 
-def GetAll(record ):
-    JSONdict={}
+def normal(record)-> dict:
+    JSONdict = {}
     for img in record:
-        flip , size , id  , cat:str=  Main(img)
+        flip , size , id  , cat=  Main(img)
         if flip and size and id and cat :
             if cat not in JSONdict:
-                if cat.lower() != "beam":
-                    JSONdict[cat] ={
-                        "Assets":[],
-                        "Flipbook":{
-                            "Assets":[]
-                        },
-                        "Textures":{
+                JSONdict[cat] ={"Assets":[]}
+            JSONdict[cat]["Assets"].append({
+                "name": "none",
+                "AssetID": id,
+                "Flipbook": flip,
+                "Size": {
+                    "x": size["x"],
+                    "y": size["y"]
+                }
+            })
+    return JSONdict
+
+def GetAll(record , mode = "normal"  ):
+    if mode == "strict":
+        JSONdict={}
+        for img in record:
+            flip , size , id  , cat=  Main(img)
+            if flip and size and id and cat :
+                if cat not in JSONdict:
+                    if cat.lower() != "beam":
+                        JSONdict[cat] ={
+                            "Assets":[],
+                            "Flipbook":{
+                                "Assets":[]
+                            },
+                            "Textures":{
+                                "Assets":[]
+                            }
+                        }
+                        if flip.lower() != "none":
+                            JSONdict[cat]["Flipbook"]["Assets"].append({
+                                    "name": "none",
+                                    "AssetID": id,
+                                    "Flipbook": flip,
+                                    "Size": {
+                                        "x": size["x"],
+                                        "y": size["y"]
+                                    },
+                                "cat":cat 
+                                })
+                        else:
+                                JSONdict[cat]["Textures"]["Assets"].append({
+                                    "name": "none",
+                                    "AssetID": id,
+                                    "Flipbook": flip,
+                                    "Size": {
+                                        "x": size["x"],
+                                        "y": size["y"]
+                                    },
+                                "cat":cat 
+                                })
+                    else:
+                        JSONdict[cat] ={
                             "Assets":[]
                         }
-                    }
-                    if flip.lower() != "none":
-                           JSONdict[cat]["Flipbook"]["Assets"].append({
-                                "name": "none",
-                                "AssetID": id,
-                                "Flipbook": flip,
-                                "Size": {
-                                    "x": size["x"],
-                                    "y": size["y"]
-                                },
-                            "cat":cat 
-                            })
-                    else:
-                             JSONdict[cat]["Textures"]["Assets"].append({
-                                "name": "none",
-                                "AssetID": id,
-                                "Flipbook": flip,
-                                "Size": {
-                                    "x": size["x"],
-                                    "y": size["y"]
-                                },
-                            "cat":cat 
-                            })
-                else:
-                    JSONdict[cat] ={
-                        "Assets":[]
-                    }
-                    JSONdict[cat]["Assets"].append({
-                        "name": "none",
-                        "AssetID": id,
-                        "Flipbook": flip,
-                        "Size": {
-                            "x": size["x"],
-                            "y": size["y"]
-                        },
-                    "cat":cat 
-                    })
-    return JSONdict
+                        JSONdict[cat]["Assets"].append({
+                            "name": "none",
+                            "AssetID": id,
+                            "Flipbook": flip,
+                            "Size": {
+                                "x": size["x"],
+                                "y": size["y"]
+                            },
+                        "cat":cat 
+                        })
+        return JSONdict
+    else:
+        return normal(record)
