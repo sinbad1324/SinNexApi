@@ -19,5 +19,3 @@ def VerifiePassword(key:str , userID:int)-> bool:
         DeletetheOne(str(userID))
         addNewValueOnUser(str(userID) , key) 
         return decrypted
-    
-

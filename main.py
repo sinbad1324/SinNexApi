@@ -1,6 +1,7 @@
 import json
 from flask import Flask , request ,jsonify
 from flask_cors import CORS
+
 import modules.AddUser as add
 import modules.ImagesAPI.core as Core
 import modules.api.Security.verifyApi as sec
@@ -14,10 +15,12 @@ def ValideUser(header,record):
 app = Flask(__name__)
 CORS(app)
 
+
 @app.route("/")
 def htmlPage():
     ip_addr = request.remote_addr
     return '<h1> Your IP address is:' + ip_addr
+
 
 @app.route("/GetAllInfos" , methods=['POST'])
 def GetAllInfos():
@@ -48,9 +51,7 @@ def obfus():
     except ValueError as e:
         return json.dumps({"message":e , "succ":False})
 
-
-
-@app.route("/login" , methods=["POST"] )
+@app.route("/login" , methods=["POST"]  )
 def Loign():
     try:
         record =  json.loads(request.data)     
@@ -65,14 +66,11 @@ def Loign():
         print(e)
     return json.dumps({"message":"Can't connecte" , "succ":False})
 
-
-
 @app.route("/Connecting" , methods=["POST"] )
 def Connecting():
     try:
         record =  json.loads(request.data)     
         header = request.headers
-        print(ValideUser(header,record) and add.UserExist(str(record["userId"])) != None)
         if ValideUser(header,record) and add.UserExist(str(record["userId"])) != None:
             return json.dumps({"message":"Connected" , "succ":True})
     except ValueError as e:
@@ -80,12 +78,10 @@ def Connecting():
     return json.dumps({"message":"Can't connecte" , "succ":False})
 
 
+
 if __name__ == "__main__":
     print("true")
-    app.run(debug=True,port=5000,use_reloader=True)
-
-
-
+    app.run(host="0.0.0.0", debug=True,port=5000,use_reloader=True)
 
 
 
