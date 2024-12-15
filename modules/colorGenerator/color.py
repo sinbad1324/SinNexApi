@@ -10,20 +10,37 @@ def clamp(n, min, max):
         return n 
 
 def randomColor():
-     return tuple(random.choice(range(255)) for _ in range(3))
+    return tuple(random.choice(range(255)) for _ in range(3))
 
 
-def GenerateColor(gradient:bool=False ,points=random.randint(2,16)):
-    points = clamp(points ,2,16)
-    if gradient:
+def GenerateColor(points=0):
+    points = clamp(points,0,18)
+    if points >= 2:
         seq=[]
-        for i in range(points):
+        for i in range(points+1):
+            time = (random.randint(0,100)/100)
+            if i==0:
+                time = 0
+            elif i==points:
+                time = 1
             seq.append({
-                "time":(random.randint(0,100)/100),
+                "time":time,
                 "color":randomColor(),
             })
+        seq.sort(key=lambda x: x["time"],reverse=False)
         return seq
     else:
-        return randomColor()
+        color =randomColor()
+        
+        return [
+            {
+                "time":0,
+                "color":color,
+            },
+            {
+                "time":1,
+                "color":color,
+            },
+        ]
     
-
+# print(GenerateColor(6))

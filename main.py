@@ -284,6 +284,7 @@ def GetRandomColor():
         valideSession = FindValideSession(
             str(record["userId"]), str(request.remote_addr), str(record["sessionId"])
         )
+        print(valideSession)
         if (
             valideSession != None
             and type(valideSession) is dict
@@ -297,20 +298,17 @@ def GetRandomColor():
             return jsonify(
                 {"message": "You are not logged in!", "error": "login", "succ": False}
             )
-        points = random.randint(2, 16)
-        gradient = False
+        points = 0
         if "sequence" in record:
             points = record["sequence"]
-        if "gradient" in record:
-            gradient = record["gradient"]
-        return jsonify(GenerateColor(gradient, points))
+        return jsonify({"data":GenerateColor(points) , "succ":True})
     except ValueError as e:
         return jsonify({"message": str(e), "succ": False})
 
 
 if __name__ == "__main__":
     print("true")
-    app.run(debug=True, port=5000, use_reloader=True)
+    app.run(host="0.0.0.0",debug=True, port=5000, use_reloader=True)
 
 
 # def AddNewUser(con , cur):
