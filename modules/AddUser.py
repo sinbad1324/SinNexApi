@@ -12,7 +12,9 @@ def AddNewUser(user:str):
             if key :
                 fernet = Fernet(key)
                 cryp =fernet.encrypt(user.encode())
-                js.AddJSON(value=[cryp.decode("utf-8")] , file=file)
+                js.AddJSON(value={
+                    "user":cryp.decode("utf-8")    
+                } , file=file)
             else:
                 js.AddJSON(value=[Fernet.generate_key().decode("utf-8") , "@@AboMet7557601GKgNfGdBz^xhTAKrD1KfpRAkFE_+wEYK$A9cgGNXlsDzD_"] , file=file)
                 AddNewUser(user)
@@ -22,16 +24,18 @@ def AddNewUser(user:str):
     except IndexError as e:
         print(e) 
 
-def GetUser(user:str) ->tuple[list , list[str]]:
+
+def GetUser(user:str) ->tuple[list , dict]:
     li:list[str] = js.Read( file, [])
     if len(li)>0:
         key:str = li[0][0]
         key = key.encode()
         fernet = Fernet(key)
         for i in range(len(li)):
-            if i > 0:
-                usertab:list[str] =li[i]
-                return li , usertab
+            if i > 0 and type(li[i]) is dict :
+                if "user" in li[i] and  fernet.decrypt(li[i]["user"]).decode("utf-8") == user:
+                    usertab:list[str] =li[i]
+                    return (li , usertab)
     return li , False
 
 
@@ -41,19 +45,19 @@ def UserExist(user:str):
 
 
 
-def addNewValueOnUser(user:str ,value):
+def addNewValueOnUser(user:str , index:str ,value):
     try:
         li, usertab= GetUser(user)
-        usertab.append(value)
+        usertab[index] = value
         js.Write( li, file)
     except IndexError as e:
         print(e)
 
-def DeletetheOne(user):
+def DeletetheOne(user , index):
     try:
         li, usertab= GetUser(user)
-        if (len(usertab)-1) >= 1:
-            usertab.pop()
+        if index in usertab:
+            del usertab[index]
         js.Write( li, file)
     except IndexError as e:
         print(e)

@@ -23,7 +23,7 @@ def GetPluginList(userID:str ,baseData:list[str]=[], cursor=""):
         else:  return False , {"message":"There was an error wanted you to sit down afterwards"}
     return True, baseData
 
-SinNexId = "122544873602005"
+SinNexId = "14328968969"
 
 def FundSinNex(data:list[str]):
     for item in data:

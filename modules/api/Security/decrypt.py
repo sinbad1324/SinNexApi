@@ -15,7 +15,9 @@ def decrypt(key:str , userID:int) -> bool:
 def VerifiePassword(key:str , userID:int)-> bool:
     decrypted =decrypt(key , userID)
     user = UserExist(str(userID))
-    if decrypted and user and not key in user:
-        DeletetheOne(str(userID))
-        addNewValueOnUser(str(userID) , key) 
+    if not "password" in user:
+        user['password'] = ""
+    if decrypted and user and  user["password"] != key:
+        DeletetheOne(str(userID) ,"password")
+        addNewValueOnUser(str(userID) ,"password", key) 
         return decrypted
