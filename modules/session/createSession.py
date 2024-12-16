@@ -17,7 +17,6 @@ def NewSession(userId:str , ipAdresse:str):
         if not "SessionData" in user:
           return createData()    
         else:
-            print((floor(time.time())- user["SessionData"]["datetime"] ))
             if (floor(time.time()) - user["SessionData"]["datetime"]) >= (24 * 60 * 60):
                 return createData()
             else: return {"message":"Your session is over!" ,"error":"Time" ,"succ":False}
@@ -35,7 +34,6 @@ def FindValideSession(userId:str , ipAdresse:str , sessionId:str):
                     return {"message":"Your session key is invalid","error":"sessionId" , "succ":False}  
                 return True
             else:
-                print({"message":"Your session is no longer valid, recreate another session!","error":"Session Time" , "succ":False}  )
                 return {"message":"Your session is no longer valid, recreate another session!","error":"Session Time" , "succ":False}  
     return False
 
