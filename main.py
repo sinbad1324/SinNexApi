@@ -51,7 +51,7 @@ CORS(app)
 @app.route("/")
 def htmlPage():
     ip_addr = request.remote_addr
-    return "<h1> Your IP address is:" + ip_addr
+    return "<h1> Your IP address is:" + ip_addr + " Aleksandre"
 
 
 @app.route("/api/getAllInfos", methods=["POST"])
@@ -308,7 +308,7 @@ def GetRandomColor():
 
 if __name__ == "__main__":
     print("true")
-    app.run(host="0.0.0.0",debug=False)
+    app.run(debug=False)
 
 
 # def AddNewUser(con , cur):
