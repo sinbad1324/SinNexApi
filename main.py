@@ -51,7 +51,7 @@ CORS(app)
 @app.route("/")
 def htmlPage():
     ip_addr = request.remote_addr
-    return "<h1> Your IP address is:" + ip_addr
+    return "<h1> Your IP address is:" + ip_addr + " Aleksandre"
 
 
 @app.route("/api/getAllInfos", methods=["POST"])

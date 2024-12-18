@@ -1,10 +1,6 @@
-json
-flask
-flask_cors
-PIL
-numpy
-matplotlib
-requests
-io
-xml
-
+git+https://github.com/openai/CLIP.git
+flask==3.1.0
+flask_cors==5.0.0
+requests==2.32.3
+matplotlib==3.10.0
+cryptography==44.0.0
