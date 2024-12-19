@@ -3,7 +3,7 @@ from modules.randomChar import randomString
 import time
 from math import floor
 def NewSession(userId:str , ipAdresse:str):
-    x,user = GetUser(userId)
+    _,user = GetUser(userId)
     def createData():
         sessionId = randomString(20)
         addNewValueOnUser(userId , "SessionData" ,  {
@@ -23,7 +23,7 @@ def NewSession(userId:str , ipAdresse:str):
     return {"message":"You are not logged in!" ,"error":"login","succ":False}
 
 def FindValideSession(userId:str , ipAdresse:str , sessionId:str):
-    x, user = GetUser(userId)
+    _, user = GetUser(userId)
     if user and  "SessionData" in user:
         data = user["SessionData"]
         if data:
