@@ -27,14 +27,13 @@ def FindValideSession(userId:str , ipAdresse:str , sessionId:str):
     if user and  "SessionData" in user:
         data = user["SessionData"]
         if data:
-            if ((floor(time.time())- user["SessionData"]["datetime"])  <= (24 * 60 * 60)) :
-                if  data["ipAdresse"] != ipAdresse:
+            if  data["ipAdresse"] != ipAdresse:
                     return {"message":"Your IP address is invalid!","error":"ipAdresse" , "succ":False}  
-                if data["sessionId"] != sessionId:
-                    return {"message":"Your session key is invalid","error":"sessionId" , "succ":False}  
-                return True
-            else:
+            if data["sessionId"] != sessionId:
+                return {"message":"Your session key is invalid","error":"sessionId" , "succ":False}  
+            if ((floor(time.time())- user["SessionData"]["datetime"])  >= (24 * 60 * 60)) :
                 return {"message":"Your session is no longer valid, recreate another session!","error":"Session Time" , "succ":False}  
+            return True
     return False
 
 def DeletSession(userId:str):
