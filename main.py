@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import json
-
+import os
 from modules.Purchased.getUserPluginList import GetPluginList, FundSinNex
 from modules.session.createSession import NewSession, FindValideSession, DeletSession
 import modules.AddUser as add
@@ -13,9 +13,9 @@ import modules.obfuscator.ToluaOfs as ob
 import modules.api.Security.decrypt as security
 import modules.obfuscator.luaCode as obfCode
 import modules.Robloxplugin.Graph as graph
-from modules.colorGenerator.color import GenerateColor, random
+from modules.colorGenerator.color import GenerateColor, random  
 
-
+ports = os.environ.get("PORT") or 5000
 def ValideUser(header, record):
     if not sec.VerifieHeader(header):
         return jsonify(
@@ -284,7 +284,6 @@ def GetRandomColor():
         valideSession = FindValideSession(
             str(record["userId"]), str(request.remote_addr), str(record["sessionId"])
         )
-        print(valideSession)
         if (
             valideSession != None
             and type(valideSession) is dict
