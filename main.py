@@ -307,8 +307,9 @@ def GetRandomColor():
 
 
 if __name__ == "__main__":
-    print("true")
-    app.run(debug=False)
+    print("falsk")
+    app.run(host="0.0.0.0", port=5000)
+
 
 
 # def AddNewUser(con , cur):
