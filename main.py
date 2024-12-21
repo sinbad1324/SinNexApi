@@ -15,7 +15,7 @@ import modules.obfuscator.luaCode as obfCode
 import modules.Robloxplugin.Graph as graph
 from modules.colorGenerator.color import GenerateColor, random  
 
-ports = os.environ.get("PORT") or 5000
+
 def ValideUser(header, record):
     if not sec.VerifieHeader(header):
         return jsonify(
@@ -307,8 +307,8 @@ def GetRandomColor():
 
 if __name__ == "__main__":
     print("falsk")
-    app.run(host="0.0.0.0", port=ports)
-
+    # app.run(host="0.0.0.0", port=ports)
+    app.run()
 
 
 # def AddNewUser(con , cur):
