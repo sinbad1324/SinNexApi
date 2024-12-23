@@ -48,10 +48,11 @@ app = Flask(__name__)
 CORS(app)
 
 
+
 @app.route("/")
 def htmlPage():
     ip_addr = request.remote_addr
-    return "<h1> Your IP address is:" + ip_addr + " Aleksandre"
+    return "<h1> Your IP address is:" + ip_addr 
 
 
 @app.route("/api/getAllInfos", methods=["POST"])
@@ -167,9 +168,11 @@ def Connecting():
     try:
         record = json.loads(request.get_data(cache=True, parse_form_data=True))
         header = request.headers
-        if not add.UserExist(str(record["userId"])):
+       
+        if add.UserExist(str(record["userId"])) == None:
+            print( add.UserExist(str(record["userId"])))
             return jsonify(
-                {"message": "You are not logged in!", "error": "login", "succ": False}
+                {"message": "You are not logged in!blblblblb", "error": "login", "succ": False}
             )
         validation = ValideUser(header, record)
         if type(validation) is dict:
@@ -306,9 +309,8 @@ def GetRandomColor():
 
 
 if __name__ == "__main__":
-    print("falsk")
-    # app.run(host="0.0.0.0", port=ports)
-    app.run()
+    app.run( port=5000 ,debug=True)
+    #app.run()
 
 
 # def AddNewUser(con , cur):

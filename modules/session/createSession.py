@@ -12,14 +12,13 @@ def NewSession(userId:str , ipAdresse:str):
             "ipAdresse":ipAdresse
         }) 
         return sessionId
-
     if user:
         if not "SessionData" in user:
           return createData()    
         else:
             if (floor(time.time()) - user["SessionData"]["datetime"]) >= (24 * 60 * 60):
-                return createData()
-            else: return {"message":"Your session is over!" ,"error":"Time" ,"succ":False}
+                return {"message":"Your session is over!" ,"error":"Time" ,"succ":False}
+            elif (user["SessionData"]["ipAdresse"] == ipAdresse) : return user["SessionData"]["sessionId"]
     return {"message":"You are not logged in!" ,"error":"login","succ":False}
 
 def FindValideSession(userId:str , ipAdresse:str , sessionId:str):
