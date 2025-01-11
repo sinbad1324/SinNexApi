@@ -8,4 +8,4 @@ RUN chmod 777 /home/ImagesSinNeXAPI
 COPY . .
 WORKDIR /home/ImagesSinNeXAPI
 
-CMD [ "python", "main.py"]
+CMD [ "python3", "-m" , "flask" , "run" , "--host=0.0.0.0"]

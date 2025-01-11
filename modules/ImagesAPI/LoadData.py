@@ -2,6 +2,8 @@ import clip
 import os
 import pickle
 
+from torchvision import transforms
+
 device =  "cpu"
 model, preprocess = clip.load("ViT-B/32", device=device)
 # ici le Vi-B/32 -> Vision Transformer 32px sur 32px 
@@ -14,10 +16,9 @@ def loadFeaturesFromFile():
         return category_features
     return None  
 
-
 def getConvertedImage(img):
     #Start fait par chatGPT (Copy)
-    return preprocess(img.convert('RGB')).unsqueeze(0).to(device)
+    return preprocess(img).unsqueeze(0).to(device)
     #end fait par chatGPT(copy)
 
 

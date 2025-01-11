@@ -13,11 +13,12 @@ def decrypt(key:str , userID:int) -> bool:
 
 
 def VerifiePassword(key:str , userID:int)-> bool:
-    decrypted =decrypt(key , userID)
     user = UserExist(str(userID))
-    if not "password" in user:
-        user['password'] = ""
-    if decrypted and user and  user["password"] != key:
+    if not user :
+        return False
+    decrypted =decrypt(key , userID)
+    if  decrypted  and  not "password" in user or  user["password"] != key:
         DeletetheOne(str(userID) ,"password")
         addNewValueOnUser(str(userID) ,"password", key) 
         return decrypted
+    return True

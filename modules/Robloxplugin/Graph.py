@@ -83,9 +83,9 @@ def curve_bezier(x, p0, p1, p2, p3):
     return {"X": result_x, "Y": result_y}
 
 
-def convert_to_number_sequence(points, seq, ev):
+def convert_to_number_sequence(points: list[int], seq: int, ev: float):
     number_sequence = []
-
+    
     if seq > 17:
         seq = 17
     if seq < 2:
@@ -95,7 +95,7 @@ def convert_to_number_sequence(points, seq, ev):
         new_seq = {
             "time": curve_points["X"],
             "value": curve_points["Y"],
-            "ev": float(ev)
+            "ev": ev
         }
         number_sequence.append(new_seq)
 

@@ -1,28 +1,43 @@
 
-from modules.PixelImg import Img
-from modules.Template import Temp
-from modules.Grid import Ggrid
-
-def Main(path):
-    try:
-        newimg = Img(path )
+from modules.ImagesAPI.PixelImg import Img
+from modules.ImagesAPI.Template import Temp
+from modules.ImagesAPI.Grid import Ggrid
+from modules.ImagesAPI.filtreduplicate import getImages , NoCloneId , GetPreLoadedImg
+import gc
+def Main(img: tuple):
+    # try:
+        newimg = Img(img )
         cat = newimg.getCompare()
+        id = newimg.OriginaleID
         NewTemp = Temp(newimg)
         GetGrid = Ggrid(NewTemp) 
         GetGrid.GetGridTemplate()
-        
         FlipBook = GetGrid.GetResult() 
         Size = newimg.GetImgSize() 
-        return FlipBook , Size , newimg.OriginaleID , cat
-    except  :
-        print("prob.")
-    return False , False, False , None
+        GetGrid = None
+        NewTemp = None
+        newimg = None
+        return FlipBook , Size , id, cat
+    # except ValueError as e  :
+    #     print(e)
+    # return False , False, False , None
 
 
-def normal(record)-> dict:
-    JSONdict = {}
-    for img in record:
-        flip , size , id  , cat=  Main(img)
+    # toSave = []
+            # toSave.append({
+            #     "name": "none",
+            #     "AssetID": ids,
+            #     "Flipbook": flip,
+            #     "Size": {
+            #         "x": size["x"],
+            #         "y": size["y"]
+            #     },
+            #     "cat":cat
+            # })
+
+def normal(images , JSONdict = {})-> dict:
+    for img in images :
+        flip , size , id  , cat=  Main(tuple(img))
         if flip and size and id and cat :
             if cat not in JSONdict:
                 JSONdict[cat] ={"Assets":[]}
@@ -34,14 +49,19 @@ def normal(record)-> dict:
                     "x": size["x"],
                     "y": size["y"]
                 }
-            })
+            })   
+    gc.collect()
     return JSONdict
 
-def GetAll(record , mode = "normal"  ):
+def GetAll(record , mode = "normal" ,extrem:int = 1 ):
+    mode = "normal"
+    record =  NoCloneId(record)
+    newRecord , JSONdict = GetPreLoadedImg(record)
+    images = getImages(newRecord,extrem)
     if mode == "strict":
         JSONdict={}
-        for img in record:
-            flip , size , id  , cat=  Main(img)
+        for img in images:
+            flip , size , id  , cat=  Main(tuple(img))
             if flip and size and id and cat :
                 if cat not in JSONdict:
                     if cat.lower() != "beam":
@@ -92,4 +112,10 @@ def GetAll(record , mode = "normal"  ):
                         })
         return JSONdict
     else:
-        return normal(record)
+        newRecord = None
+        record = None
+        mode = None
+        return normal(images, JSONdict)
+
+
+

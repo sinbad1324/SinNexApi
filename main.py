@@ -7,7 +7,7 @@ from modules.session.createSession import NewSession, FindValideSession, DeletSe
 import modules.AddUser as add
 import modules.ImagesAPI.core as Core
 import modules.api.Security.verifyApi as sec
-
+import modules.Json as js
 # import Data.postgresql.auth as sql
 import modules.obfuscator.ToluaOfs as ob
 import modules.api.Security.decrypt as security
@@ -33,21 +33,27 @@ def ValideUser(header, record):
                 "succ": False,
             }
         )
-    if not security.VerifiePassword(header.get("password"), record["userId"]):
-        return jsonify(
-            {
-                "message": "Your api keys are not right!",
-                "error": "Api key",
-                "succ": False,
-            }
-        )
+    # if not security.VerifiePassword(header.get("password"), record["userId"]):
+    #     return jsonify(
+    #         {
+    #             "message": "Your api keys are not right!",
+    #             "error": "Api key",
+    #             "succ": False,
+    #         }
+    #     )
     return True
 
 
 app = Flask(__name__)
 CORS(app)
 
+assetsData = {}
 
+def CanFloat(value)-> float:
+    try:
+        return  float(value)
+    except ValueError:
+        return 0
 
 @app.route("/")
 def htmlPage():
@@ -60,6 +66,13 @@ def GetAllInfos():
     try:
         record = request.get_json()
         header = request.headers
+        if not "Assets" in record :
+            return jsonify({"message":"The world is drifting!"})
+        if type(record["Assets"]) != list:
+            return {"message": "Me no speak france", "error": "Type", "succ": False}
+        if len(record["Assets"]) > 500:
+            return {"message": "You send too many pictures !!!", "error": "Extra Data", "succ": False}
+    
         valideSession = FindValideSession(
             str(record["userId"]), str(request.remote_addr), str(record["sessionId"])
         )
@@ -76,10 +89,13 @@ def GetAllInfos():
             )
         if type(validation) is dict:
             return validation
+        extrem:int = 1
+        if  "extrem" in record:
+            extrem=int(record["extrem"])
         if "methode" in record and record["methode"] == "strict":
-            return jsonify(Core.GetAll(record["Assets"], "strict"))
+            return jsonify(Core.GetAll(record["Assets"], "strict",extrem))
         else:
-            return jsonify(Core.GetAll(record["Assets"]))
+            return jsonify(Core.GetAll(record["Assets"],extrem=extrem))
     except ValueError as e:
         print(e)
     return "[]"
@@ -169,8 +185,7 @@ def Connecting():
         record = json.loads(request.get_data(cache=True, parse_form_data=True))
         header = request.headers
        
-        if add.UserExist(str(record["userId"])) == None:
-            print( add.UserExist(str(record["userId"])))
+        if not add.UserExist(str(record["userId"])):
             return jsonify(
                 {"message": "You are not logged in!blblblblb", "error": "login", "succ": False}
             )
@@ -214,7 +229,9 @@ def ConverToSq():
             seq = record["seq"]
         env = 0
         if "env" in record:
-            env = record["env"]
+            if len(record["env"])>0  :
+                env = CanFloat(record["env"])
+        print(env)
         point = []
         if "points" in record:
             point = record["points"]
@@ -235,7 +252,7 @@ def ConverToSq():
                 {"message": "You are not logged in!", "error": "login", "succ": False}
             )
         return jsonify(
-            {"succ": True, "data": graph.convert_to_number_sequence(point, seq, env)}
+            {"succ": True, "data": graph.convert_to_number_sequence(point, seq, int(env))}
         )
     except ValueError as e:
         return jsonify({"message": e, "succ": False})
@@ -263,7 +280,6 @@ def GetGraphData():
                 {"message": "You are not logged in!", "error": "login", "succ": False}
             )
         if "data" in record:
-            print(record["data"])
             default_names, default_curves = graph.get_data(record["data"])
             return jsonify(
                 {
@@ -309,7 +325,7 @@ def GetRandomColor():
 
 
 if __name__ == "__main__":
-    app.run( port=5000 ,debug=True)
+    app.run( host="0.0.0.0" ,threaded = True)
     #app.run()
 
 

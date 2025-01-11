@@ -4,13 +4,7 @@ import clip
 import torch
 from PIL import Image
 import matplotlib.pyplot as plt
-import modules.GetImgSize as hp
-from modules.LoadData import getConvertedImage , loadFeaturesFromFile
-
-
-
-device = "cuda" if torch.cuda.is_available() else "cpu"
-model, preprocess = clip.load("ViT-B/32", device=device)
+from modules.ImagesAPI.LoadData import getConvertedImage , loadFeaturesFromFile , model 
 
 
 category_features = loadFeaturesFromFile() 
@@ -31,28 +25,22 @@ def pixelate(image, pixel_size):
 
 
 class Img:
-    def __init__(self,path , pxlSize = 10) -> None:
-
+    def __init__(self,imageData: tuple , pxlSize = 10 ) -> None:
         self.comparedUsed = False
-        img ,self.OriginaleID =  hp.OpenImg(path)
+        input_features,img  ,self.OriginaleID =  imageData
         if img == None : return None
-        self.ConvertedImage = img
-        img = img.convert("RGBA")
-
+        self.input_features = input_features
       #  gray_image = ImageOps.grayscale(img)
-        gray_image = img.convert("L")
         #gray_image.show("gray_image")
 
-        gray_array = np.array(gray_image)
+        gray_array = np.array(img)
 
         self.threshold_value = 127
         binary_array = np.where(gray_array >  self.threshold_value, 0, 255).astype(np.uint8)
         self.binary_image = Image.fromarray(binary_array)
         self.pixel_size = pxlSize
         pixelated_image = pixelate(self.binary_image, self.pixel_size)
-
         img_pixels = np.array(pixelated_image)
-
         self.img = img
         self.img_pixels = img_pixels
 
@@ -111,19 +99,10 @@ class Img:
             self.img.show()
 
     def getCompare(self):
-        if self.comparedUsed :
-            print("Vous avez deja utilisé cette function c'es seulement une fois deso! :[ ") 
-            return 
-        self.comparedUsed = True
-        self.ConvertedImage =   getConvertedImage(self.ConvertedImage)
         # start chatGPT
         similarities = {}
-        with torch.no_grad():
-            input_features = model.encode_image(self.ConvertedImage)
-            input_features /= input_features.norm(dim=-1, keepdim=True) 
-
         for category, features in category_features.items():
-            similarity = (input_features @ features.T).mean().item() 
+            similarity = (self.input_features @ features.T).mean().item() 
             similarities[category] = similarity
         # end chatGPT
         predicted_category = max(similarities, key=similarities.get)
