@@ -1,11 +1,19 @@
-services:
-  grid-detect:
-    tty: true
-    build: .
-    ports:
-      - "8080:8080"
-    volumes:
-      - BANANA:/home/ImagesSinNeXAPI
+version: "3.9"
 
-volumes:
-  BANANA:
+services:
+  detect-grid-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: detect-grid-api
+    ports:
+      - "5000:5000" # Expose le port 5000
+    environment:
+      # Variables d'environnement pour la configuration en production
+      FLASK_ENV: production
+      FLASK_DEBUG: 0
+    command: gunicorn --bind 0.0.0.0:5000 main:app
+
+
+
+ 

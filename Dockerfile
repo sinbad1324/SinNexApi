@@ -1,11 +1,17 @@
-FROM python:3.10
+FROM python:3.10-slim
 
-RUN  pip install --upgrade pip
-RUN pip install git+https://github.com/openai/CLIP.git
-RUN pip install flask flask_cors matplotlib requests cryptography
-RUN mkdir /home/ImagesSinNeXAPI
-RUN chmod 777 /home/ImagesSinNeXAPI
-COPY . .
-WORKDIR /home/ImagesSinNeXAPI
+# Définir le répertoire de travail
+WORKDIR /detect-grid-api
 
-CMD [ "python3", "-m" , "flask" , "run" , "--host=0.0.0.0"]
+# Installer git et autres outils nécessaires
+RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+
+# Ajouter les fichiers locaux à l'image Docker
+ADD . /detect-grid-api
+
+# Mettre à jour pip et installer les dépendances Python
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
+
+# Commande par défaut pour démarrer l'application
+CMD ["python", "main.py"]
